@@ -1,0 +1,335 @@
+#!/usr/bin/env python3
+"""Genera el sitio estático de vitaapps.io.
+
+Fuente de los textos legales: ../Budget/docs/privacy-policy.md y support.md.
+Uso:  python3 build.py   (luego commit + push desde GitHub Desktop)
+"""
+import datetime
+import html
+import pathlib
+import re
+
+ROOT = pathlib.Path(__file__).resolve().parent
+DOCS = ROOT.parent / "Budget" / "docs"
+YEAR = datetime.date.today().year
+EMAIL = "support@vitaapps.io"
+
+# ---------------------------------------------------------------- markdown mínimo
+
+def inline(text):
+    text = html.escape(text, quote=False)
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', text)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+    text = re.sub(r"(?<![\w/\">])([\w.+-]+@[\w-]+\.[\w.]+\w)", r'<a href="mailto:\1">\1</a>', text)
+    return text
+
+
+def markdown(md):
+    """Encabezados, párrafos, listas, negritas y enlaces. Un párrafo que empieza con una
+    línea en negritas sola ("**¿Pregunta?**" + respuesta) se vuelve una pregunta frecuente."""
+    out, title = [], ""
+    for block in re.split(r"\n\s*\n", md.strip()):
+        lines = block.strip().split("\n")
+        first = lines[0]
+        if first.startswith("# "):
+            title = first[2:].strip()
+            continue
+        if first.startswith("## "):
+            text = first[3:].strip()
+            anchor = re.sub(r"[^a-z0-9áéíóúñü]+", "-", text.lower()).strip("-")
+            out.append(f'<h2 id="{anchor}">{inline(text)}</h2>')
+            continue
+        if all(l.startswith("- ") for l in lines):
+            items = "".join(f"<li>{inline(l[2:])}</li>" for l in lines)
+            out.append(f"<ul>{items}</ul>")
+            continue
+        m = re.fullmatch(r"\*\*(.+)\*\*", first)
+        if m and len(lines) > 1:
+            answer = inline(" ".join(lines[1:]))
+            out.append(f'<details class="faq"><summary>{inline(m.group(1))}</summary><p>{answer}</p></details>')
+            continue
+        out.append(f"<p>{inline(' '.join(lines))}</p>")
+    return title, "\n".join(out)
+
+# ---------------------------------------------------------------- plantilla
+
+CSS = """
+:root{--bg:#f5f6f8;--surface:#fff;--fg:#14161a;--muted:#5f6571;--line:#e3e6eb;--accent:#1c69ee;--accent-soft:#e8f0fe;--accent-ink:#fff;--radius:20px;--shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0c0f;--surface:#15171c;--fg:#f2f3f5;--muted:#9aa1ad;--line:#262a31;--accent:#5b9bff;--accent-soft:#16233b;--accent-ink:#06142b;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35)}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;height:auto;display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.site{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font-weight:700;letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#1c69ee,#22b07d);display:grid;place-items:center;color:#fff;font-size:15px;font-weight:800}
+nav.site a{color:var(--muted);margin-left:22px;font-size:15px}
+nav.site a:hover,nav.site a[aria-current]{color:var(--fg);text-decoration:none}
+h1,h2,h3{letter-spacing:-.02em;line-height:1.15}
+.hero{padding:88px 0 56px}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);margin:0 0 18px;font-weight:800}
+.lead{font-size:clamp(1.1rem,2.2vw,1.35rem);color:var(--muted);max-width:640px;margin:0}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:600;font-size:16px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.btn:hover{text-decoration:none;border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+section{padding:56px 0}
+section h2{font-size:clamp(1.7rem,3.6vw,2.4rem);margin:0 0 12px}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:32px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+.card h3{font-size:1.15rem;margin:14px 0 6px}
+.card p{margin:0;color:var(--muted);font-size:16px}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.ico svg{width:24px;height:24px}
+.app-card{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.app-card img{width:96px;height:96px;border-radius:22px;box-shadow:var(--shadow)}
+.app-card .txt{flex:1;min-width:220px}
+.app-card h3{margin:0 0 4px;font-size:1.5rem}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+@media (max-width:820px){.split{grid-template-columns:1fr}.hero{padding-top:56px}}
+.app-id{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.app-id img{width:72px;height:72px;border-radius:17px;box-shadow:var(--shadow)}
+.app-id strong{display:block;font-size:1.25rem}
+.app-id span{color:var(--muted);font-size:15px}
+.phone{position:relative;width:min(320px,80vw);margin:0 auto;border-radius:52px;padding:12px;background:#0d0e11;box-shadow:0 30px 60px -20px rgba(16,24,40,.35),0 0 0 2px #2a2d33 inset}
+.phone img{border-radius:42px;width:100%}
+.glow{position:absolute;inset:-40px -60px;z-index:-1;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 28%,transparent),transparent);filter:blur(10px)}
+.band{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.checks{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.checks li{display:flex;gap:12px;align-items:flex-start}
+.checks li::before{content:"✓";flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:14px;margin-top:2px}
+.cta{text-align:center}
+.cta p{color:var(--muted);max-width:560px;margin:0 auto}
+.cta .btns{justify-content:center}
+.doc{max-width:760px;padding:56px 20px 72px}
+.doc .back{font-size:15px;color:var(--muted)}
+.doc h1{font-size:clamp(2rem,5vw,2.8rem);margin:14px 0 8px}
+.doc .meta{color:var(--muted);margin:0 0 28px}
+.doc h2{font-size:1.35rem;margin:40px 0 10px;padding-top:8px}
+.doc p,.doc li{color:var(--fg)}
+.doc ul{padding-left:22px}
+.doc li{margin:8px 0}
+.doc .intro p{margin:0}
+.doc .intro{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow)}
+.contact{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--accent-soft);border-radius:var(--radius);padding:22px 24px;margin:8px 0 32px}
+.contact p{margin:0}
+.faq{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 20px;margin:12px 0;box-shadow:var(--shadow)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 28px 18px 0;font-weight:600;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:0;top:14px;font-size:22px;color:var(--muted);font-weight:400}
+.faq[open] summary::after{content:"−"}
+.faq p{margin:0 0 18px;color:var(--muted)}
+footer.site{border-top:1px solid var(--line);padding:32px 0 44px;color:var(--muted);font-size:14px}
+footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer.site a{color:var(--muted);margin-left:18px}
+footer.site a:first-child{margin-left:0}
+@media (max-width:520px){nav.site a{margin-left:14px;font-size:14px}.hide-sm{display:none}}
+"""
+
+NAV = [("/lumos-wallet/", "Lumos Wallet"), ("/lumos-wallet/soporte/", "Soporte")]
+
+
+def page(path, title, description, body, doc=False):
+    nav = "".join(
+        f'<a href="{href}"{" aria-current=page" if href == path else ""}>{label}</a>' for href, label in NAV
+    )
+    main = f'<main class="wrap doc">{body}</main>' if doc else f"<main>{body}</main>"
+    return f"""<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(title)}</title>
+<meta name="description" content="{html.escape(description)}">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(description)}">
+<meta property="og:image" content="https://vitaapps.io/assets/lumos-icon.png">
+<link rel="canonical" href="https://vitaapps.io{path}">
+<link rel="icon" href="/assets/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0f" media="(prefers-color-scheme: dark)">
+<style>{CSS}</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="/"><span class="brand-mark">V</span>Vita Apps</a>
+<nav class="site">{nav}</nav>
+</div></header>
+{main}
+<footer class="site"><div class="wrap">
+<span>© {YEAR} Francisco Javier Prior Ramos · Vita Apps</span>
+<span><a href="/lumos-wallet/privacidad/">Privacidad</a><a href="/lumos-wallet/soporte/">Soporte</a><a href="mailto:{EMAIL}">{EMAIL}</a></span>
+</div></footer>
+</body>
+</html>
+"""
+
+# ---------------------------------------------------------------- íconos (trazos simples)
+
+def icon(d):
+    return f'<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{d}</svg></span>'
+
+I_GAUGE = '<path d="M12 14l4-4"/><path d="M3.3 17a9 9 0 1 1 17.4 0"/>'
+I_JAR = '<path d="M8 3h8M9 3v3.5L6 9v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9l-3-2.5V3"/><path d="M6 14h12"/>'
+I_BOLT = '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'
+I_CAL = '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>'
+I_PIE = '<path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>'
+I_LOCK = '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'
+I_EYE = '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+I_HEART = '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>'
+I_PIN = '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
+
+def cards(items):
+    return '<div class="grid">' + "".join(
+        f'<div class="card">{icon(i)}<h3>{t}</h3><p>{p}</p></div>' for i, t, p in items
+    ) + "</div>"
+
+# ---------------------------------------------------------------- páginas
+
+def landing():
+    body = f"""
+<div class="wrap">
+<section class="hero">
+<span class="eyebrow">Vita Apps</span>
+<h1>Apps sencillas para<br>un día a día más claro.</h1>
+<p class="lead">Hacemos apps para iPhone pensadas en México: pocas pantallas, números que se entienden y tu información siempre bajo tu control.</p>
+<div class="btns"><a class="btn primary" href="/lumos-wallet/">Conoce Lumos Wallet</a><a class="btn" href="mailto:{EMAIL}">Escríbenos</a></div>
+</section>
+
+<section>
+<span class="eyebrow">Nuestras apps</span>
+<div class="card app-card">
+<img src="/assets/lumos-icon.png" alt="Ícono de Lumos Wallet" width="96" height="96">
+<div class="txt"><h3>Lumos Wallet</h3><p>Tu presupuesto personal en un solo número: lo que de verdad puedes gastar este mes, sin tocar tus pagos fijos ni tus metas.</p></div>
+<a class="btn primary" href="/lumos-wallet/">Ver la app</a>
+</div>
+</section>
+
+<section>
+<span class="eyebrow">Cómo trabajamos</span>
+<h2>Lo que puedes esperar de nosotros</h2>
+{cards([
+    (I_EYE, "Claridad", "Cada número se puede explicar. Si la app te dice algo, puedes tocarlo y ver de dónde sale."),
+    (I_LOCK, "Privacidad", "Sin publicidad y sin rastreo. No vendemos tu información y puedes borrarla cuando quieras."),
+    (I_PIN, "Hechas para México", "Quincenas, meses sin intereses, fechas de corte: pensadas para cómo se usa el dinero aquí."),
+])}
+</section>
+</div>
+"""
+    return page("/", "Vita Apps · Apps sencillas para iPhone",
+                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro.", body)
+
+
+def product():
+    body = f"""
+<div class="wrap">
+<section class="hero split">
+<div>
+<div class="app-id"><img src="/assets/lumos-icon.png" alt="" width="72" height="72"><div><strong>Lumos Wallet</strong><span>Finanzas · iPhone</span></div></div>
+<h1>Sabe cuánto puedes gastar hoy.</h1>
+<p class="lead">Lumos Wallet convierte tus cuentas, tu quincena y tus pagos fijos en un solo número: tu <strong>Libre</strong>, lo que de verdad puedes gastar este mes.</p>
+<div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
+</div>
+<div style="position:relative"><div class="glow"></div><div class="phone"><img src="/assets/lumos-inicio.jpg" alt="Pantalla de Inicio de Lumos Wallet con el Libre del mes" width="640" height="1391"></div></div>
+</section>
+</div>
+
+<section class="band"><div class="wrap">
+<span class="eyebrow">Qué hace</span>
+<h2>Todo lo que necesitas para llegar a fin de mes</h2>
+{cards([
+    (I_GAUGE, "Tu Libre, claro", "Ingresos menos compromisos, apartados y ahorro. Toca el número y ve exactamente cómo se calcula, y cuánto te toca gastar al día."),
+    (I_JAR, "Apartados que se llenan", "Fondo de emergencia, viaje, seguro, predial: dinos cuánto y para cuándo, y te decimos cuánto guardar al mes."),
+    (I_BOLT, "Menos capturar", "Registro automático con Apple Pay, favoritos, widgets, botón en el Centro de control e importación de estados de cuenta en CSV."),
+    (I_CAL, "Avisos a tiempo", "Recordatorios antes de cada pago, de la fecha límite de tu tarjeta y de tu quincena."),
+    (I_PIE, "Reportes que se entienden", "Categorías por grupo con colores, límites por categoría y en qué se va tu dinero cada mes."),
+    (I_PIN, "Hecha para México", "Quincenas, meses sin intereses, fecha de corte y límite de pago, deudas con personas y cierre de mes."),
+])}
+</div></section>
+
+<div class="wrap">
+<section>
+<span class="eyebrow">Privacidad</span>
+<h2>Tu información es tuya</h2>
+<ul class="checks">
+<li>No nos conectamos a tu banco ni pedimos contraseñas bancarias.</li>
+<li>Sin publicidad y sin rastreo entre apps.</li>
+<li>Bloqueo con Face ID y modo para ocultar montos.</li>
+<li>Exporta todo o borra tu cuenta desde la app, cuando quieras.</li>
+</ul>
+<p style="margin-top:22px"><a href="/lumos-wallet/privacidad/">Lee el aviso de privacidad →</a></p>
+</section>
+
+<section class="cta">
+<h2>¿Tienes preguntas?</h2>
+<p>Revisa las preguntas frecuentes o escríbenos. Respondemos lo antes posible.</p>
+<div class="btns"><a class="btn primary" href="/lumos-wallet/soporte/">Ir a soporte</a><a class="btn" href="mailto:{EMAIL}">{EMAIL}</a></div>
+</section>
+</div>
+"""
+    return page("/lumos-wallet/", "Lumos Wallet · Sabe cuánto puedes gastar hoy",
+                "Lumos Wallet convierte tus cuentas, tu quincena y tus pagos fijos en un solo número: lo que de verdad puedes gastar este mes.", body)
+
+
+def legal(path, source, kind):
+    title, content = markdown((DOCS / source).read_text(encoding="utf-8"))
+    meta = ""
+    m = re.search(r"<p><strong>Última actualización:</strong> ([^<]+)</p>\n?", content)
+    if m:
+        meta = f'<p class="meta">Última actualización: {m.group(1)}</p>'
+        content = content.replace(m.group(0), "")
+    if kind == "soporte":
+        # El primer párrafo (cómo contactarnos) se vuelve una caja con botón.
+        first = re.match(r"<p>(.+?)</p>\n?", content)
+        if first:
+            content = content[first.end():]
+            meta += f'<div class="contact"><p>{first.group(1)}</p><a class="btn primary" href="mailto:{EMAIL}">Escribir a soporte</a></div>'
+        description = "Ayuda y preguntas frecuentes de Lumos Wallet."
+    else:
+        first = re.match(r"(<p>.+?</p>)\n?", content)
+        if first:
+            content = content[first.end():]
+            meta += f'<div class="intro">{first.group(1)}</div>'
+        description = "Aviso de privacidad de Lumos Wallet: qué información usa la app, para qué y cómo borrarla."
+    body = f'<a class="back" href="/lumos-wallet/">← Lumos Wallet</a><h1>{inline(title)}</h1>{meta}{content}'
+    return page(path, f"{title}", description, body, doc=True)
+
+
+def redirect(to):
+    return f'<!DOCTYPE html><html lang="es-MX"><meta charset="utf-8"><title>Lumos Wallet</title><meta http-equiv="refresh" content="0; url={to}"><link rel="canonical" href="https://vitaapps.io{to}"><p><a href="{to}">Continuar a {to}</a></p></html>\n'
+
+
+def not_found():
+    body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
+<p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
+<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
+    return page("/404.html", "Página no encontrada · Vita Apps", "", body)
+
+
+def write(rel, text):
+    path = ROOT / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    print("  ", rel)
+
+
+if __name__ == "__main__":
+    print("Generando sitio:")
+    write("index.html", landing())
+    write("lumos-wallet/index.html", product())
+    write("lumos-wallet/privacidad/index.html", legal("/lumos-wallet/privacidad/", "privacy-policy.md", "privacidad"))
+    write("lumos-wallet/soporte/index.html", legal("/lumos-wallet/soporte/", "support.md", "soporte"))
+    write("alcanza/index.html", redirect("/lumos-wallet/"))
+    write("alcanza/privacidad/index.html", redirect("/lumos-wallet/privacidad/"))
+    write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))
+    write("404.html", not_found())
