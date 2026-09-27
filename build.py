@@ -421,6 +421,24 @@ def redirect(to):
     return f'<!DOCTYPE html><html lang="es-MX"><meta charset="utf-8"><title>Lumos Wallet</title><meta http-equiv="refresh" content="0; url={to}"><link rel="canonical" href="https://vitaapps.io{to}"><p><a href="{to}">Continuar a {to}</a></p></html>\n'
 
 
+def invite():
+    body = f"""<div class="wrap"><section class="hero cta">
+<img src="/assets/lumos-icon.png" alt="" width="96" height="96" style="border-radius:22px;margin:0 auto 20px;box-shadow:var(--shadow)">
+<span class="eyebrow">Te invitaron a Lumos Wallet</span>
+<h1>Un mes de Premium para los dos.</h1>
+<p class="lead" style="margin:0 auto">Descarga Lumos Wallet en tu iPhone, crea tu cuenta y en <strong>Menú → Invita a tus amigos</strong> escribe este código:</p>
+<p id="code" style="font:700 2.4rem ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;margin:28px 0 8px">········</p>
+<div class="btns"><a class="btn primary" href="https://apps.apple.com/mx/search?term=Lumos%20Wallet">Buscar en la App Store</a><button class="btn" id="copy" type="button">Copiar código</button></div>
+<p style="margin-top:24px;font-size:15px">Cuando uses la app una semana, los dos ganan un mes de Premium.</p>
+</section></div>
+<script>
+(function(){{var c=(new URLSearchParams(location.search).get('c')||'').toUpperCase().replace(/[^A-Z2-9]/g,'').slice(0,8);
+var el=document.getElementById('code');if(c.length===8){{el.textContent=c;}}else{{el.textContent='Pide el código';el.style.fontSize='1.4rem';}}
+document.getElementById('copy').onclick=function(){{if(c.length===8&&navigator.clipboard){{navigator.clipboard.writeText(c);this.textContent='Copiado';}}}};}})();
+</script>"""
+    return page("/i/", "Te invitaron a Lumos Wallet", "Descarga Lumos Wallet y usa el código de tu amigo: ganan un mes de Premium los dos.", body)
+
+
 def not_found():
     body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
 <p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
@@ -447,4 +465,5 @@ if __name__ == "__main__":
     write("alcanza/index.html", redirect("/lumos-wallet/"))
     write("alcanza/privacidad/index.html", redirect("/lumos-wallet/privacidad/"))
     write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))
+    write("i/index.html", invite())
     write("404.html", not_found())
