@@ -67,7 +67,7 @@ header.site{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--
 header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
 .brand{display:flex;align-items:center;gap:10px;color:var(--fg);font-weight:700;letter-spacing:-.01em}
 .brand:hover{text-decoration:none}
-.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#1c69ee,#22b07d);display:grid;place-items:center;color:#fff;font-size:15px;font-weight:800}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#08baf4,#2152d9);display:grid;place-items:center;color:#fff;font-size:15px;font-weight:800}
 nav.site a{color:var(--muted);margin-left:22px;font-size:15px}
 nav.site a:hover,nav.site a[aria-current]{color:var(--fg);text-decoration:none}
 h1,h2,h3{letter-spacing:-.02em;line-height:1.15}
@@ -236,11 +236,11 @@ def product():
 <section class="hero split">
 <div>
 <div class="app-id"><img src="/assets/lumos-icon.png" alt="" width="72" height="72"><div><strong>Lumos Wallet</strong><span>Finanzas · iPhone</span></div></div>
-<h1>Sabe cuánto puedes gastar hoy.</h1>
-<p class="lead">Lumos Wallet convierte tus cuentas, tu quincena y tus pagos fijos en un solo número: tu <strong>Libre</strong>, lo que de verdad puedes gastar este mes.</p>
+<h1>¿Cuánto te queda para gastar este mes?</h1>
+<p class="lead">Lumos Wallet junta tus cuentas, tu quincena y tus pagos fijos en un solo número: tu <strong>Libre</strong>, o sea, lo que de verdad te queda para gastar.</p>
 <div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
 </div>
-<div style="position:relative"><div class="glow"></div><div class="phone"><img src="/assets/lumos-inicio.jpg" alt="Pantalla de Inicio de Lumos Wallet con el Libre del mes" width="640" height="1391"></div></div>
+<div style="position:relative"><div class="glow"></div><div class="phone"><img src="/assets/lumos-inicio.jpg" alt="Pantalla de Inicio de Lumos Wallet con el Libre del mes" width="640" height="1390"></div></div>
 </section>
 </div>
 
@@ -248,12 +248,12 @@ def product():
 <span class="eyebrow">Qué hace</span>
 <h2>Todo lo que necesitas para llegar a fin de mes</h2>
 {cards([
-    (I_GAUGE, "Tu Libre, claro", "Ingresos menos compromisos, apartados y ahorro. Toca el número y ve exactamente cómo se calcula, y cuánto te toca gastar al día."),
-    (I_JAR, "Apartados que se llenan", "Fondo de emergencia, viaje, seguro, predial: dinos cuánto y para cuándo, y te decimos cuánto guardar al mes."),
-    (I_BOLT, "Menos capturar", "Registro automático con Apple Pay, favoritos, widgets, botón en el Centro de control e importación de estados de cuenta en CSV."),
+    (I_GAUGE, "Tu Libre, sin adivinar", "Tus ingresos menos tus pagos fijos, lo que vas guardando y tu ahorro. Toca el número y ve de dónde sale, y cuánto puedes gastar al día."),
+    (I_JAR, "Apartados que se van llenando", "Fondo de emergencia, un viaje, el seguro del coche, el predial: dinos cuánto necesitas y para cuándo, y te decimos cuánto guardar cada mes."),
+    (I_BOLT, "Captura en segundos", "Tus pagos con el celular se registran solos, y además tienes favoritos, widgets, un botón en el Centro de control e importación de estados de cuenta en CSV."),
     (I_CAL, "Avisos a tiempo", "Recordatorios antes de cada pago, de la fecha límite de tu tarjeta y de tu quincena."),
     (I_PIE, "Reportes que se entienden", "Categorías por grupo con colores, límites por categoría y en qué se va tu dinero cada mes."),
-    (I_PIN, "Hecha para México", "Quincenas, meses sin intereses, fecha de corte y límite de pago, deudas con personas y cierre de mes."),
+    (I_PIN, "Pensada para México", "Quincenas, meses sin intereses, fecha de corte y fecha límite de pago, lo que te deben y lo que debes, y cierre de mes."),
 ])}
 </div></section>
 
@@ -264,7 +264,7 @@ def product():
 <ul class="checks">
 <li>No nos conectamos a tu banco ni pedimos contraseñas bancarias.</li>
 <li>Sin publicidad y sin rastreo entre apps.</li>
-<li>Bloqueo con Face ID y modo para ocultar montos.</li>
+<li>Bloquea la app con reconocimiento facial y oculta los montos cuando quieras.</li>
 <li>Exporta todo o borra tu cuenta desde la app, cuando quieras.</li>
 </ul>
 <p style="margin-top:22px"><a href="/lumos-wallet/privacidad/">Lee el aviso de privacidad →</a></p>
@@ -277,8 +277,8 @@ def product():
 </section>
 </div>
 """
-    return page("/lumos-wallet/", "Lumos Wallet · Sabe cuánto puedes gastar hoy",
-                "Lumos Wallet convierte tus cuentas, tu quincena y tus pagos fijos en un solo número: lo que de verdad puedes gastar este mes.", body)
+    return page("/lumos-wallet/", "Lumos Wallet · Tu presupuesto claro",
+                "Lumos Wallet junta tus cuentas, tu quincena y tus pagos fijos en un solo número: lo que de verdad te queda para gastar este mes.", body)
 
 
 def legal(path, source, kind):
