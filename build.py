@@ -167,7 +167,7 @@ def page(path, title, description, body, doc=False):
 </div></header>
 {main}
 <footer class="site"><div class="wrap">
-<span>© {YEAR} Francisco Javier Prior Ramos · Vita Apps</span>
+<span>© {YEAR} Vita Apps</span>
 <span><a href="/lumos-wallet/privacidad/">Privacidad</a><a href="/lumos-wallet/soporte/">Soporte</a><a href="mailto:{EMAIL}">{EMAIL}</a></span>
 </div></footer>
 </body>
