@@ -439,6 +439,27 @@ document.getElementById('copy').onclick=function(){{if(c.length===8&&navigator.c
     return page("/i/", "Te invitaron a Lumos Wallet", "Descarga Lumos Wallet y usa el código de tu amigo: ganan un mes de Premium los dos.", body)
 
 
+def splitnest_join():
+    # Destino de los links de invitación a grupos de SplitNest (?c=TOKEN). Cuando
+    # Associated Domains esté activo, iOS abre la app directo y esta página solo
+    # la ve quien no tiene la app. Mientras tanto, el botón usa costsplit://.
+    body = """<div class="wrap"><section class="hero cta">
+<img src="/assets/splitnest-icon.svg" alt="" width="96" height="96" style="border-radius:22px;margin:0 auto 20px;box-shadow:var(--shadow)">
+<span class="eyebrow">Te invitaron a un grupo en SplitNest</span>
+<h1>Cuentas claras con tu grupo.</h1>
+<p class="lead" style="margin:0 auto" id="lead">Abre la invitación en SplitNest para ver el grupo y unirte.</p>
+<div class="btns"><a class="btn primary" id="open" href="/splitnest/">Abrir en SplitNest</a><button class="btn" id="copy" type="button">Copiar link</button></div>
+<p style="margin-top:24px;font-size:15px">¿Aún no tienes la app? SplitNest llega muy pronto a la App Store. Guarda este link para unirte cuando la instales.</p>
+</section></div>
+<script>
+(function(){var t=(new URLSearchParams(location.search).get('c')||'').replace(/[^0-9A-Za-z]/g,'').slice(0,64);
+var open=document.getElementById('open'),copy=document.getElementById('copy');
+if(t.length>=16){open.href='costsplit://join/'+t;}else{document.getElementById('lead').textContent='Este link está incompleto. Pide a alguien del grupo que te lo vuelva a enviar.';open.style.display='none';copy.style.display='none';}
+copy.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(location.href);this.textContent='Copiado';}};})();
+</script>"""
+    return page("/splitnest/unirse/", "Te invitaron a SplitNest", "Únete a tu grupo en SplitNest para llevar las cuentas de los gastos compartidos.", body, app="splitnest")
+
+
 def not_found():
     body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
 <p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
@@ -466,4 +487,5 @@ if __name__ == "__main__":
     write("alcanza/privacidad/index.html", redirect("/lumos-wallet/privacidad/"))
     write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))
     write("i/index.html", invite())
+    write("splitnest/unirse/index.html", splitnest_join())
     write("404.html", not_found())
