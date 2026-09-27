@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Genera el sitio estático de vitaapps.io.
 
-Fuente de los textos legales: ../Budget/docs/privacy-policy.md y support.md.
+Fuente de los textos legales (privacy-policy.md y support.md):
+  Lumos Wallet: ../Budget/docs/
+  SplitNest:    _docs/splitnest/ (Jekyll no publica carpetas que empiezan con _)
 Uso:  python3 build.py   (luego commit + push desde GitHub Desktop)
 """
 import datetime
@@ -10,9 +12,29 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent
-DOCS = ROOT.parent / "Budget" / "docs"
 YEAR = datetime.date.today().year
 EMAIL = "support@vitaapps.io"
+
+# Cada app tiene su ruta, sus textos legales y su color. Lumos usa el azul base del CSS.
+APPS = {
+    "lumos": {
+        "name": "Lumos Wallet",
+        "path": "/lumos-wallet/",
+        "docs": ROOT.parent / "Budget" / "docs",
+        "og_image": "lumos-icon.png",
+        "css": "",
+    },
+    "splitnest": {
+        "name": "SplitNest",
+        "path": "/splitnest/",
+        "docs": ROOT / "_docs" / "splitnest",
+        "og_image": "splitnest-icon.png",
+        # Turquesa de SplitNest (#0A8FA8), un poco más oscuro en texto y botones para que se lea bien.
+        "css": ":root{--accent:#077c92;--accent-soft:#e1f3f6;--accent-ink:#fff}"
+               "@media (prefers-color-scheme:dark){:root{--accent:#3cc3d9;--accent-soft:#0f2a30;--accent-ink:#03222a}}"
+               ".hero-mark{width:min(240px,56vw);margin:0 auto;border-radius:22.5%;box-shadow:0 30px 60px -20px rgba(8,80,96,.35)}\n",
+    },
+}
 
 # ---------------------------------------------------------------- markdown mínimo
 
@@ -94,6 +116,7 @@ section h2{font-size:clamp(1.7rem,3.6vw,2.4rem);margin:0 0 12px}
 .app-card img{width:96px;height:96px;border-radius:22px;box-shadow:var(--shadow)}
 .app-card .txt{flex:1;min-width:220px}
 .app-card h3{margin:0 0 4px;font-size:1.5rem}
+.app-card+.app-card{margin-top:18px}
 .split{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
 @media (max-width:820px){.split{grid-template-columns:1fr}.hero{padding-top:56px}}
 .app-id{display:flex;align-items:center;gap:16px;margin-bottom:22px}
@@ -103,6 +126,7 @@ section h2{font-size:clamp(1.7rem,3.6vw,2.4rem);margin:0 0 12px}
 .phone{position:relative;width:min(320px,80vw);margin:0 auto;border-radius:52px;padding:12px;background:#0d0e11;box-shadow:0 30px 60px -20px rgba(16,24,40,.35),0 0 0 2px #2a2d33 inset}
 .phone img{border-radius:42px;width:100%}
 .glow{position:absolute;inset:-40px -60px;z-index:-1;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 28%,transparent),transparent);filter:blur(10px)}
+main{overflow-x:clip}
 .band{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .checks{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .checks li{display:flex;gap:12px;align-items:flex-start}
@@ -135,12 +159,14 @@ footer.site a:first-child{margin-left:0}
 @media (max-width:520px){nav.site a{margin-left:14px;font-size:14px}.hide-sm{display:none}}
 """
 
-NAV = [("/lumos-wallet/", "Lumos Wallet"), ("/lumos-wallet/soporte/", "Soporte")]
 
-
-def page(path, title, description, body, doc=False):
+def page(path, title, description, body, doc=False, app="lumos"):
+    a = APPS[app]
+    # "Soporte" lleva al soporte de la app en la que estás; en celular se oculta (está en el pie).
+    nav_items = [(APPS["lumos"]["path"], "Lumos Wallet", ""), (APPS["splitnest"]["path"], "SplitNest", ""),
+                 (a["path"] + "soporte/", "Soporte", ' class="hide-sm"')]
     nav = "".join(
-        f'<a href="{href}"{" aria-current=page" if href == path else ""}>{label}</a>' for href, label in NAV
+        f'<a href="{href}"{cls}{" aria-current=page" if href == path else ""}>{label}</a>' for href, label, cls in nav_items
     )
     main = f'<main class="wrap doc">{body}</main>' if doc else f"<main>{body}</main>"
     return f"""<!DOCTYPE html>
@@ -152,13 +178,13 @@ def page(path, title, description, body, doc=False):
 <meta name="description" content="{html.escape(description)}">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(description)}">
-<meta property="og:image" content="https://vitaapps.io/assets/lumos-icon.png">
+<meta property="og:image" content="https://vitaapps.io/assets/{a["og_image"]}">
 <link rel="canonical" href="https://vitaapps.io{path}">
 <link rel="icon" href="/assets/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0c0f" media="(prefers-color-scheme: dark)">
-<style>{CSS}</style>
+<style>{CSS}{a["css"]}</style>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -168,7 +194,7 @@ def page(path, title, description, body, doc=False):
 {main}
 <footer class="site"><div class="wrap">
 <span>© {YEAR} Vita Apps</span>
-<span><a href="/lumos-wallet/privacidad/">Privacidad</a><a href="/lumos-wallet/soporte/">Soporte</a><a href="mailto:{EMAIL}">{EMAIL}</a></span>
+<span><a href="{a["path"]}privacidad/">Privacidad</a><a href="{a["path"]}soporte/">Soporte</a><a href="mailto:{EMAIL}">{EMAIL}</a></span>
 </div></footer>
 </body>
 </html>
@@ -188,6 +214,13 @@ I_LOCK = '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4
 I_EYE = '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
 I_HEART = '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>'
 I_PIN = '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
+I_USERS = '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"/><path d="M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/>'
+I_MERGE = '<path d="M3 5c6 0 7 7 13 7h5"/><path d="M3 19c6 0 7-7 13-7"/><path d="M18 9l3 3-3 3"/>'
+I_CASH = '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>'
+I_REPEAT = '<path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>'
+I_CHART = '<path d="M3 3v18h18"/><path d="M8 17v-4M12 17V8M16 17v-6M20 17V5"/>'
+I_BELL = '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'
+I_LINK = '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>'
 
 def cards(items):
     return '<div class="grid">' + "".join(
@@ -213,6 +246,11 @@ def landing():
 <div class="txt"><h3>Lumos Wallet</h3><p>Tu presupuesto personal en un solo número: lo que de verdad puedes gastar este mes, sin tocar tus pagos fijos ni tus metas.</p></div>
 <a class="btn primary" href="/lumos-wallet/">Ver la app</a>
 </div>
+<div class="card app-card">
+<img src="/assets/splitnest-icon.svg" alt="Ícono de SplitNest" width="96" height="96">
+<div class="txt"><h3>SplitNest</h3><p>Gastos compartidos sin broncas: con tus roomies, tu pareja o en un viaje con amigos, quién pagó y quién le debe a quién, al centavo.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
+<a class="btn primary" href="/splitnest/">Ver la app</a>
+</div>
 </section>
 
 <section>
@@ -227,7 +265,7 @@ def landing():
 </div>
 """
     return page("/", "Vita Apps · Apps sencillas para iPhone",
-                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro.", body)
+                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro, y SplitNest, para dividir gastos en grupo.", body)
 
 
 def product():
@@ -281,8 +319,82 @@ def product():
                 "Lumos Wallet junta tus cuentas, tu quincena y tus pagos fijos en un solo número: lo que de verdad te queda para gastar este mes.", body)
 
 
-def legal(path, source, kind):
-    title, content = markdown((DOCS / source).read_text(encoding="utf-8"))
+def splitnest():
+    body = f"""
+<div class="wrap">
+<section class="hero split">
+<div>
+<div class="app-id"><img src="/assets/splitnest-icon.svg" alt="" width="72" height="72"><div><strong>SplitNest</strong><span>Finanzas · iPhone</span></div></div>
+<h1>Cuentas claras, amistades largas.</h1>
+<p class="lead">SplitNest lleva la cuenta de lo que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó, cuánto le toca a cada quien y quién le debe a quién, al centavo.</p>
+<div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
+</div>
+<div style="position:relative"><div class="glow"></div><img class="hero-mark" src="/assets/splitnest-icon.svg" alt="" width="240" height="240"></div>
+</section>
+</div>
+
+<section class="band"><div class="wrap">
+<span class="eyebrow">Qué hace</span>
+<h2>Se acabó andar cobrando con la calculadora</h2>
+{cards([
+    (I_USERS, "Un grupo para cada cosa", "El viaje, el depa, tu pareja o una fiesta. Agrega a la gente solo con su nombre, aunque todavía no tenga la app: cuando se una, se queda con su lugar."),
+    (I_PIE, "Divide como sea justo", "En partes iguales, por partes, por porcentaje o con ajustes para quien pidió de más. Los saldos cuadran al centavo."),
+    (I_MERGE, "Menos pagos para quedar a mano", "Con Simplificar deudas, SplitNest te sugiere la menor cantidad de pagos para que todos queden en paz."),
+    (I_CASH, "Anota cada pago", "Completo o en abonos, en efectivo, por transferencia, PayPal, Revolut u otro. Y si alguien cubre la deuda de otro, también se puede."),
+    (I_REPEAT, "Gastos que se repiten", "Crea plantillas para la renta, los servicios y las suscripciones, y anota los que ya tocan con un toque."),
+    (I_CHART, "Presupuesto del grupo", "Ponle un tope al viaje o a la casa y ve en qué se va el dinero, por categoría y por quién pagó."),
+])}
+</div></section>
+
+<div class="wrap">
+<section>
+<span class="eyebrow">Y además</span>
+<h2>Pensada para cómo se hacen las cuentas en la vida real</h2>
+<ul class="checks">
+<li>Invita con un link o un código, también por WhatsApp.</li>
+<li>En Personas ves cuánto te debe cada quien, sumando todos los grupos que comparten.</li>
+<li>Funciona sin internet y se sincroniza cuando vuelves a tener señal.</li>
+<li>En español e inglés, con pesos, dólares, euros y otras monedas.</li>
+</ul>
+</section>
+
+<section>
+<span class="eyebrow">Lo que viene</span>
+<h2>Pronto en SplitNest</h2>
+<p style="color:var(--muted);margin:0">Todavía no están en la app, pero ya estamos trabajando en ellas.</p>
+{cards([
+    (I_BELL, "Recordatorios", "Un empujoncito amable para quien tiene pagos pendientes."),
+    (I_LINK, "Links de pago", "Comparte tu CLABE o tu link de Mercado Pago para que te paguen más fácil."),
+    (I_GAUGE, "Conexión con Lumos Wallet", "Lleva tu parte de cada gasto compartido a tu presupuesto en Lumos Wallet."),
+])}
+</section>
+
+<section>
+<span class="eyebrow">Privacidad</span>
+<h2>Tu información es tuya</h2>
+<ul class="checks">
+<li>SplitNest no mueve dinero: solo lleva la cuenta de quién le debe a quién.</li>
+<li>Sin publicidad y sin rastreo entre apps.</li>
+<li>Lo que anotas en un grupo solo lo ven las personas de ese grupo.</li>
+<li>Exporta todo o borra tu cuenta desde la app, cuando quieras.</li>
+</ul>
+<p style="margin-top:22px"><a href="/splitnest/privacidad/">Lee el aviso de privacidad →</a></p>
+</section>
+
+<section class="cta">
+<h2>¿Tienes preguntas?</h2>
+<p>Revisa las preguntas frecuentes o escríbenos. Respondemos lo antes posible.</p>
+<div class="btns"><a class="btn primary" href="/splitnest/soporte/">Ir a soporte</a><a class="btn" href="mailto:{EMAIL}">{EMAIL}</a></div>
+</section>
+</div>
+"""
+    return page("/splitnest/", "SplitNest · Gastos compartidos sin broncas",
+                "SplitNest lleva la cuenta de los gastos que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó y quién le debe a quién, al centavo.", body, app="splitnest")
+
+
+def legal(path, source, kind, app="lumos"):
+    a = APPS[app]
+    title, content = markdown((a["docs"] / source).read_text(encoding="utf-8"))
     meta = ""
     m = re.search(r"<p><strong>Última actualización:</strong> ([^<]+)</p>\n?", content)
     if m:
@@ -294,15 +406,15 @@ def legal(path, source, kind):
         if first:
             content = content[first.end():]
             meta += f'<div class="contact"><p>{first.group(1)}</p><a class="btn primary" href="mailto:{EMAIL}">Escribir a soporte</a></div>'
-        description = "Ayuda y preguntas frecuentes de Lumos Wallet."
+        description = f"Ayuda y preguntas frecuentes de {a['name']}."
     else:
         first = re.match(r"(<p>.+?</p>)\n?", content)
         if first:
             content = content[first.end():]
             meta += f'<div class="intro">{first.group(1)}</div>'
-        description = "Aviso de privacidad de Lumos Wallet: qué información usa la app, para qué y cómo borrarla."
-    body = f'<a class="back" href="/lumos-wallet/">← Lumos Wallet</a><h1>{inline(title)}</h1>{meta}{content}'
-    return page(path, f"{title}", description, body, doc=True)
+        description = f"Aviso de privacidad de {a['name']}: qué información usa la app, para qué y cómo borrarla."
+    body = f'<a class="back" href="{a["path"]}">← {a["name"]}</a><h1>{inline(title)}</h1>{meta}{content}'
+    return page(path, f"{title}", description, body, doc=True, app=app)
 
 
 def redirect(to):
@@ -312,7 +424,7 @@ def redirect(to):
 def not_found():
     body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
 <p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
-<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
+<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/splitnest/">SplitNest</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
     return page("/404.html", "Página no encontrada · Vita Apps", "", body)
 
 
@@ -329,6 +441,9 @@ if __name__ == "__main__":
     write("lumos-wallet/index.html", product())
     write("lumos-wallet/privacidad/index.html", legal("/lumos-wallet/privacidad/", "privacy-policy.md", "privacidad"))
     write("lumos-wallet/soporte/index.html", legal("/lumos-wallet/soporte/", "support.md", "soporte"))
+    write("splitnest/index.html", splitnest())
+    write("splitnest/privacidad/index.html", legal("/splitnest/privacidad/", "privacy-policy.md", "privacidad", app="splitnest"))
+    write("splitnest/soporte/index.html", legal("/splitnest/soporte/", "support.md", "soporte", app="splitnest"))
     write("alcanza/index.html", redirect("/lumos-wallet/"))
     write("alcanza/privacidad/index.html", redirect("/lumos-wallet/privacidad/"))
     write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))

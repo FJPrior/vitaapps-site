@@ -2,3 +2,4 @@ exclude:
   - build.py
   - README.md
   - .gitignore
+  - _docs
