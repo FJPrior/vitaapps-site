@@ -288,9 +288,9 @@ def product():
 {cards([
     (I_GAUGE, "Tu Libre, sin adivinar", "Tus ingresos menos tus pagos fijos, lo que vas guardando y tu ahorro. Toca el número y ve de dónde sale, y cuánto puedes gastar al día."),
     (I_JAR, "Apartados que se van llenando", "Fondo de emergencia, un viaje, el seguro del coche, el predial: dinos cuánto necesitas y para cuándo, y te decimos cuánto guardar cada mes."),
-    (I_BOLT, "Captura en segundos", "Tus pagos con el celular se registran solos, y además tienes favoritos, widgets, un botón en el Centro de control e importación de estados de cuenta en CSV."),
-    (I_CAL, "Avisos a tiempo", "Recordatorios antes de cada pago, de la fecha límite de tu tarjeta y de tu quincena."),
-    (I_PIE, "Reportes que se entienden", "Categorías por grupo con colores, límites por categoría y en qué se va tu dinero cada mes."),
+    (I_BOLT, "Captura en segundos", "Tus pagos con el celular se registran solos. Además: favoritos, widgets, un botón en el Centro de control y tu estado de cuenta en PDF, foto o CSV, leído en tu iPhone."),
+    (I_USERS, "Hogar compartido", "Con tu pareja o tus roomies: repartan los gastos de la casa a partes iguales, según ingresos o por categoría, y vean quién le debe a quién. Cada quien conserva lo suyo."),
+    (I_PIE, "Reportes y avisos", "En qué se va tu dinero cada mes, límites por categoría y recordatorios antes de cada pago, de tu tarjeta y de tu quincena."),
     (I_PIN, "Pensada para México", "Quincenas, meses sin intereses, fecha de corte y fecha límite de pago, lo que te deben y lo que debes, y cierre de mes."),
 ])}
 </div></section>
