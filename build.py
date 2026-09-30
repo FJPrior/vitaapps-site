@@ -433,6 +433,35 @@ def invite():
     return page("/i/", "Te invitaron a Lumos Wallet", "Lumos Wallet te dice cuánto puedes gastar este mes. Descárgalo en tu iPhone.", body)
 
 
+def lumos_delete_account():
+    # Google Play pide un enlace web para pedir el borrado de la cuenta sin tener la app.
+    body = """<div class="wrap"><section class="hero cta" style="text-align:left;max-width:720px;margin:0 auto">
+<span class="eyebrow">Lumos Wallet</span>
+<h1>Eliminar tu cuenta</h1>
+<p class="lead">Puedes borrar tu cuenta y todos tus datos cuando quieras.</p>
+<h2>Desde la app</h2>
+<ul>
+<li><strong>iPhone:</strong> Menú → Tu cuenta → Eliminar cuenta.</li>
+<li><strong>Android y web (app.vitaapps.io):</strong> toca tu ícono de cuenta, arriba a la derecha → Eliminar cuenta.</li>
+</ul>
+<p>Te pedimos tu contraseña (o Apple) para confirmar que eres tú, y se borra en ese momento.</p>
+<h2>Sin la app</h2>
+<p>Escríbenos a <a href="mailto:support@vitaapps.io?subject=Eliminar%20mi%20cuenta%20de%20Lumos%20Wallet">support@vitaapps.io</a> desde el correo con el que te registraste, con el asunto "Eliminar mi cuenta". La borramos en un máximo de 30 días y te confirmamos por correo.</p>
+<h2>Qué se borra</h2>
+<ul>
+<li>Tu espacio personal completo: cuentas, movimientos, plan, apartados, préstamos, fotos de comprobantes y ajustes.</li>
+<li>Tu usuario para iniciar sesión.</li>
+</ul>
+<h2>Qué se queda</h2>
+<ul>
+<li>Si estás en un hogar compartido, sales de él. Lo que registraste en el hogar se queda para las demás personas; si eras la última, el hogar también se borra.</li>
+<li>Los reportes de fallos que la app envió de forma anónima pueden conservarse hasta 90 días.</li>
+<li>Si tienes Lumos Premium, cancela la suscripción en la tienda donde la compraste; borrar la cuenta no la cancela.</li>
+</ul>
+</section></div>"""
+    return page("/lumos-wallet/eliminar-cuenta/", "Eliminar tu cuenta de Lumos Wallet", "Cómo borrar tu cuenta de Lumos Wallet y todos tus datos, con o sin la app.", body)
+
+
 def lumos_join():
     # Destino del link de invitación a un hogar compartido (?c=TOKEN). El botón abre la
     # app con lumoswallet://invite/TOKEN; quien no la tiene ve cómo conseguirla. Los
@@ -504,4 +533,5 @@ if __name__ == "__main__":
     write("i/index.html", invite())
     write("splitnest/unirse/index.html", splitnest_join())
     write("lumos-wallet/hogar/index.html", lumos_join())
+    write("lumos-wallet/eliminar-cuenta/index.html", lumos_delete_account())
     write("404.html", not_found())
