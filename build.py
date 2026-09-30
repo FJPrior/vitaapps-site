@@ -433,6 +433,27 @@ def invite():
     return page("/i/", "Te invitaron a Lumos Wallet", "Lumos Wallet te dice cuánto puedes gastar este mes. Descárgalo en tu iPhone.", body)
 
 
+def lumos_join():
+    # Destino del link de invitación a un hogar compartido (?c=TOKEN). El botón abre la
+    # app con lumoswallet://invite/TOKEN; quien no la tiene ve cómo conseguirla. Los
+    # links viejos alcanza://invite/... siguen funcionando en la app.
+    body = """<div class="wrap"><section class="hero cta">
+<img src="/assets/lumos-icon.png" alt="" width="96" height="96" style="border-radius:22px;margin:0 auto 20px;box-shadow:var(--shadow)">
+<span class="eyebrow">Te invitaron a un hogar en Lumos Wallet</span>
+<h1>Lleven juntos lo de la casa.</h1>
+<p class="lead" style="margin:0 auto" id="lead">Abre la invitación en Lumos Wallet para unirte al hogar. Cada quien conserva su espacio personal; solo se comparte lo del hogar.</p>
+<div class="btns"><a class="btn primary" id="open" href="/lumos-wallet/">Abrir en Lumos Wallet</a><button class="btn" id="copy" type="button">Copiar código</button></div>
+<p style="margin-top:24px;font-size:15px">¿Aún no tienes la app? <a href="https://apps.apple.com/mx/search?term=Lumos%20Wallet">Descárgala en la App Store</a>, crea tu cuenta y vuelve a abrir este link. También puedes pegar el código en Menú → Hogar compartido → Ya tengo un código de invitación. El link funciona una vez y expira en 7 días.</p>
+</section></div>
+<script>
+(function(){var t=(new URLSearchParams(location.search).get('c')||'').replace(/[^0-9A-Za-z]/g,'').slice(0,64);
+var open=document.getElementById('open'),copy=document.getElementById('copy');
+if(t.length>=16){open.href='lumoswallet://invite/'+t;}else{document.getElementById('lead').textContent='Este link está incompleto. Pide a quien te invitó que te lo vuelva a enviar.';open.style.display='none';copy.style.display='none';}
+copy.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(t);this.textContent='Copiado';}};})();
+</script>"""
+    return page("/lumos-wallet/hogar/", "Te invitaron a un hogar en Lumos Wallet", "Únete al hogar compartido en Lumos Wallet para llevar juntos los gastos de la casa.", body)
+
+
 def splitnest_join():
     # Destino de los links de invitación a grupos de SplitNest (?c=TOKEN). Cuando
     # Associated Domains esté activo, iOS abre la app directo y esta página solo
@@ -482,4 +503,5 @@ if __name__ == "__main__":
     write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))
     write("i/index.html", invite())
     write("splitnest/unirse/index.html", splitnest_join())
+    write("lumos-wallet/hogar/index.html", lumos_join())
     write("404.html", not_found())
