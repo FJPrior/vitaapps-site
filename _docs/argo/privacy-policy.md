@@ -1,8 +1,8 @@
-# Aviso de privacidad de SplitNest
+# Aviso de privacidad de Argo
 
 **Última actualización:** 26 de septiembre de 2026
 
-SplitNest es una app para llevar las cuentas de los gastos que compartes con otras personas: registras gastos y pagos en grupos, y la app te dice quién le debe a quién. SplitNest no mueve dinero, solo lleva la cuenta. Este aviso explica qué información usa SplitNest, para qué y qué puedes hacer con ella.
+Argo es una app para llevar las cuentas de los gastos que compartes con otras personas: registras gastos y pagos en grupos, y la app te dice quién le debe a quién. Argo no mueve dinero, solo lleva la cuenta. Este aviso explica qué información usa Argo, para qué y qué puedes hacer con ella.
 
 **Responsable:** Francisco Javier Prior Ramos, contacto: support@vitaapps.io.
 
@@ -10,13 +10,13 @@ SplitNest es una app para llevar las cuentas de los gastos que compartes con otr
 
 - **Tu cuenta.** Tu correo electrónico, un identificador de usuario y, si nos lo das, tu nombre. Puedes entrar con Apple o con correo y contraseña. Si entras con Apple, recibimos el correo que Apple nos comparta (puede ser uno privado de Apple) y, si decides compartirlo, el nombre de tu Apple ID.
 - **Lo que anotas en tus grupos.** Los grupos (nombre, tipo y moneda), los nombres de las personas que agregas, los gastos (concepto, monto, fecha, categoría, notas y cómo se dividieron), los pagos entre ustedes, los presupuestos y los gastos recurrentes.
-- **Personas sin cuenta.** Puedes agregar a alguien a un grupo solo con su nombre, aunque no use SplitNest. De esa persona solo guardamos el nombre que se escriba y los gastos y pagos en los que aparece. Si alguien te agregó así y quieres que cambie o quite tu nombre, pídeselo a esa persona o escríbenos.
+- **Personas sin cuenta.** Puedes agregar a alguien a un grupo solo con su nombre, aunque no use Argo. De esa persona solo guardamos el nombre que se escriba y los gastos y pagos en los que aparece. Si alguien te agregó así y quieres que cambie o quite tu nombre, pídeselo a esa persona o escríbenos.
 - **Tu lista de personas.** Para mostrarte en "Personas" tus saldos con alguien sumando todos los grupos que comparten, guardamos una lista que relaciona a esa persona entre tus grupos. Esa lista es privada: solo tú la ves.
 - **Reportes de fallas.** Si la app se cierra por un error, puede enviarse un reporte técnico (versión de la app, modelo de iPhone y en qué parte ocurrió el error) para poder corregirlo. No incluye tus gastos.
 
-SplitNest **no se conecta a tu banco**, **no mueve dinero** y **no te pide datos de tarjetas**. Los pagos entre ustedes se hacen por fuera (en efectivo, por transferencia, etc.); en la app solo quedan anotados.
+Argo **no se conecta a tu banco**, **no mueve dinero** y **no te pide datos de tarjetas**. Los pagos entre ustedes se hacen por fuera (en efectivo, por transferencia, etc.); en la app solo quedan anotados.
 
-Para que la app funcione sin conexión, se guarda una copia de tus grupos **en tu iPhone**, que se borra cuando cierras sesión. Y cuando cambias de app, SplitNest tapa su pantalla para que tu información no se vea en el selector de apps.
+Para que la app funcione sin conexión, se guarda una copia de tus grupos **en tu iPhone**, que se borra cuando cierras sesión. Y cuando cambias de app, Argo tapa su pantalla para que tu información no se vea en el selector de apps.
 
 ## Quién puede ver tu información
 
@@ -48,7 +48,7 @@ Mientras tengas tu cuenta. Cuando eliminas tu cuenta, esta se borra en ese momen
 
 ## Menores de edad
 
-SplitNest no está dirigida a menores de 13 años.
+Argo no está dirigida a menores de 13 años.
 
 ## Cambios a este aviso
 

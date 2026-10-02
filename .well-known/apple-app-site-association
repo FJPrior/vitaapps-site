@@ -4,7 +4,8 @@
       {
         "appIDs": ["2UUMNT37Z6.com.franciscoprior.splitnest"],
         "components": [
-          { "/": "/splitnest/unirse/*", "comment": "SplitNest group invites" }
+          { "/": "/argo/unirse/*", "comment": "Argo group invites" },
+          { "/": "/splitnest/unirse/*", "comment": "Invites sent before the rename to Argo" }
         ]
       }
     ]

@@ -3,7 +3,7 @@
 
 Fuente de los textos legales (privacy-policy.md y support.md):
   Lumos Wallet: ../Budget/docs/
-  SplitNest:    _docs/splitnest/ (Jekyll no publica carpetas que empiezan con _)
+  Argo:    _docs/argo/ (Jekyll no publica carpetas que empiezan con _)
 Uso:  python3 build.py   (luego commit + push desde GitHub Desktop)
 """
 import datetime
@@ -24,12 +24,12 @@ APPS = {
         "og_image": "lumos-icon.png",
         "css": "",
     },
-    "splitnest": {
-        "name": "SplitNest",
-        "path": "/splitnest/",
-        "docs": ROOT / "_docs" / "splitnest",
-        "og_image": "splitnest-icon.png",
-        # Turquesa de SplitNest (#0A8FA8), un poco más oscuro en texto y botones para que se lea bien.
+    "argo": {
+        "name": "Argo",
+        "path": "/argo/",
+        "docs": ROOT / "_docs" / "argo",
+        "og_image": "argo-og.png",
+        # Turquesa de Argo (#0A8FA8), un poco más oscuro en texto y botones para que se lea bien.
         "css": ":root{--accent:#077c92;--accent-soft:#e1f3f6;--accent-ink:#fff}"
                "@media (prefers-color-scheme:dark){:root{--accent:#3cc3d9;--accent-soft:#0f2a30;--accent-ink:#03222a}}"
                ".hero-mark{width:min(240px,56vw);margin:0 auto;border-radius:22.5%;box-shadow:0 30px 60px -20px rgba(8,80,96,.35)}\n",
@@ -163,7 +163,7 @@ footer.site a:first-child{margin-left:0}
 def page(path, title, description, body, doc=False, app="lumos"):
     a = APPS[app]
     # "Soporte" lleva al soporte de la app en la que estás; en celular se oculta (está en el pie).
-    nav_items = [(APPS["lumos"]["path"], "Lumos Wallet", ""), (APPS["splitnest"]["path"], "SplitNest", ""),
+    nav_items = [(APPS["lumos"]["path"], "Lumos Wallet", ""), (APPS["argo"]["path"], "Argo", ""),
                  (a["path"] + "soporte/", "Soporte", ' class="hide-sm"')]
     nav = "".join(
         f'<a href="{href}"{cls}{" aria-current=page" if href == path else ""}>{label}</a>' for href, label, cls in nav_items
@@ -247,9 +247,9 @@ def landing():
 <a class="btn primary" href="/lumos-wallet/">Ver la app</a>
 </div>
 <div class="card app-card">
-<img src="/assets/splitnest-icon.svg" alt="Ícono de SplitNest" width="96" height="96">
-<div class="txt"><h3>SplitNest</h3><p>Gastos compartidos sin broncas: con tus roomies, tu pareja o en un viaje con amigos, quién pagó y quién le debe a quién, al centavo.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
-<a class="btn primary" href="/splitnest/">Ver la app</a>
+<img src="/assets/argo-icon.png" alt="Ícono de Argo" width="96" height="96">
+<div class="txt"><h3>Argo</h3><p>Gastos compartidos sin broncas: con tus roomies, tu pareja o en un viaje con amigos, quién pagó y quién le debe a quién, al centavo.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
+<a class="btn primary" href="/argo/">Ver la app</a>
 </div>
 </section>
 
@@ -265,7 +265,7 @@ def landing():
 </div>
 """
     return page("/", "Vita Apps · Apps sencillas para iPhone",
-                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro, y SplitNest, para dividir gastos en grupo.", body)
+                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro, y Argo, para dividir gastos en grupo.", body)
 
 
 def product():
@@ -319,17 +319,17 @@ def product():
                 "Lumos Wallet junta tus cuentas, tu quincena y tus pagos fijos en un solo número: lo que de verdad te queda para gastar este mes.", body)
 
 
-def splitnest():
+def argo():
     body = f"""
 <div class="wrap">
 <section class="hero split">
 <div>
-<div class="app-id"><img src="/assets/splitnest-icon.svg" alt="" width="72" height="72"><div><strong>SplitNest</strong><span>Finanzas · iPhone</span></div></div>
+<div class="app-id"><img src="/assets/argo-icon.png" alt="" width="72" height="72"><div><strong>Argo</strong><span>Finanzas · iPhone</span></div></div>
 <h1>Cuentas claras, amistades largas.</h1>
-<p class="lead">SplitNest lleva la cuenta de lo que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó, cuánto le toca a cada quien y quién le debe a quién, al centavo.</p>
+<p class="lead">Argo lleva la cuenta de lo que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó, cuánto le toca a cada quien y quién le debe a quién, al centavo.</p>
 <div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
 </div>
-<div style="position:relative"><div class="glow"></div><img class="hero-mark" src="/assets/splitnest-icon.svg" alt="" width="240" height="240"></div>
+<div style="position:relative"><div class="glow"></div><img class="hero-mark" src="/assets/argo-icon.png" alt="" width="240" height="240"></div>
 </section>
 </div>
 
@@ -339,7 +339,7 @@ def splitnest():
 {cards([
     (I_USERS, "Un grupo para cada cosa", "El viaje, el depa, tu pareja o una fiesta. Agrega a la gente solo con su nombre, aunque todavía no tenga la app: cuando se una, se queda con su lugar."),
     (I_PIE, "Divide como sea justo", "En partes iguales, por partes, por porcentaje o con ajustes para quien pidió de más. Los saldos cuadran al centavo."),
-    (I_MERGE, "Menos pagos para quedar a mano", "Con Simplificar deudas, SplitNest te sugiere la menor cantidad de pagos para que todos queden en paz."),
+    (I_MERGE, "Menos pagos para quedar a mano", "Con Simplificar deudas, Argo te sugiere la menor cantidad de pagos para que todos queden en paz."),
     (I_CASH, "Anota cada pago", "Completo o en abonos, en efectivo, por transferencia, PayPal, Revolut u otro. Y si alguien cubre la deuda de otro, también se puede."),
     (I_REPEAT, "Gastos que se repiten", "Crea plantillas para la renta, los servicios y las suscripciones, y anota los que ya tocan con un toque."),
     (I_CHART, "Presupuesto del grupo", "Ponle un tope al viaje o a la casa y ve en qué se va el dinero, por categoría y por quién pagó."),
@@ -360,7 +360,7 @@ def splitnest():
 
 <section>
 <span class="eyebrow">Lo que viene</span>
-<h2>Pronto en SplitNest</h2>
+<h2>Pronto en Argo</h2>
 <p style="color:var(--muted);margin:0">Todavía no están en la app, pero ya estamos trabajando en ellas.</p>
 {cards([
     (I_BELL, "Recordatorios", "Un empujoncito amable para quien tiene pagos pendientes."),
@@ -373,23 +373,23 @@ def splitnest():
 <span class="eyebrow">Privacidad</span>
 <h2>Tu información es tuya</h2>
 <ul class="checks">
-<li>SplitNest no mueve dinero: solo lleva la cuenta de quién le debe a quién.</li>
+<li>Argo no mueve dinero: solo lleva la cuenta de quién le debe a quién.</li>
 <li>Sin publicidad y sin rastreo entre apps.</li>
 <li>Lo que anotas en un grupo solo lo ven las personas de ese grupo.</li>
 <li>Exporta todo o borra tu cuenta desde la app, cuando quieras.</li>
 </ul>
-<p style="margin-top:22px"><a href="/splitnest/privacidad/">Lee el aviso de privacidad →</a></p>
+<p style="margin-top:22px"><a href="/argo/privacidad/">Lee el aviso de privacidad →</a></p>
 </section>
 
 <section class="cta">
 <h2>¿Tienes preguntas?</h2>
 <p>Revisa las preguntas frecuentes o escríbenos. Respondemos lo antes posible.</p>
-<div class="btns"><a class="btn primary" href="/splitnest/soporte/">Ir a soporte</a><a class="btn" href="mailto:{EMAIL}">{EMAIL}</a></div>
+<div class="btns"><a class="btn primary" href="/argo/soporte/">Ir a soporte</a><a class="btn" href="mailto:{EMAIL}">{EMAIL}</a></div>
 </section>
 </div>
 """
-    return page("/splitnest/", "SplitNest · Gastos compartidos sin broncas",
-                "SplitNest lleva la cuenta de los gastos que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó y quién le debe a quién, al centavo.", body, app="splitnest")
+    return page("/argo/", "Argo · Gastos compartidos sin broncas",
+                "Argo lleva la cuenta de los gastos que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó y quién le debe a quién, al centavo.", body, app="argo")
 
 
 def legal(path, source, kind, app="lumos"):
@@ -417,8 +417,10 @@ def legal(path, source, kind, app="lumos"):
     return page(path, f"{title}", description, body, doc=True, app=app)
 
 
-def redirect(to):
-    return f'<!DOCTYPE html><html lang="es-MX"><meta charset="utf-8"><title>Lumos Wallet</title><meta http-equiv="refresh" content="0; url={to}"><link rel="canonical" href="https://vitaapps.io{to}"><p><a href="{to}">Continuar a {to}</a></p></html>\n'
+def redirect(to, title="Lumos Wallet", keep_query=False):
+    # keep_query: also carries ?c=TOKEN, so invite links sent before a rename still work.
+    js = f'<script>location.replace("{to}"+location.search+location.hash)</script>' if keep_query else ""
+    return f'<!DOCTYPE html><html lang="es-MX"><meta charset="utf-8"><title>{title}</title>{js}<meta http-equiv="refresh" content="0; url={to}"><link rel="canonical" href="https://vitaapps.io{to}"><p><a href="{to}">Continuar a {to}</a></p></html>\n'
 
 
 def invite():
@@ -483,17 +485,17 @@ copy.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(t)
     return page("/lumos-wallet/hogar/", "Te invitaron a un hogar en Lumos Wallet", "Únete al hogar compartido en Lumos Wallet para llevar juntos los gastos de la casa.", body)
 
 
-def splitnest_join():
-    # Destino de los links de invitación a grupos de SplitNest (?c=TOKEN). Cuando
+def argo_join():
+    # Destino de los links de invitación a grupos de Argo (?c=TOKEN). Cuando
     # Associated Domains esté activo, iOS abre la app directo y esta página solo
     # la ve quien no tiene la app. Mientras tanto, el botón usa costsplit://.
     body = """<div class="wrap"><section class="hero cta">
-<img src="/assets/splitnest-icon.svg" alt="" width="96" height="96" style="border-radius:22px;margin:0 auto 20px;box-shadow:var(--shadow)">
-<span class="eyebrow">Te invitaron a un grupo en SplitNest</span>
+<img src="/assets/argo-icon.png" alt="" width="96" height="96" style="border-radius:22px;margin:0 auto 20px;box-shadow:var(--shadow)">
+<span class="eyebrow">Te invitaron a un grupo en Argo</span>
 <h1>Cuentas claras con tu grupo.</h1>
-<p class="lead" style="margin:0 auto" id="lead">Abre la invitación en SplitNest para ver el grupo y unirte.</p>
-<div class="btns"><a class="btn primary" id="open" href="/splitnest/">Abrir en SplitNest</a><button class="btn" id="copy" type="button">Copiar link</button></div>
-<p style="margin-top:24px;font-size:15px">¿Aún no tienes la app? SplitNest llega muy pronto a la App Store. Guarda este link para unirte cuando la instales.</p>
+<p class="lead" style="margin:0 auto" id="lead">Abre la invitación en Argo para ver el grupo y unirte.</p>
+<div class="btns"><a class="btn primary" id="open" href="/argo/">Abrir en Argo</a><button class="btn" id="copy" type="button">Copiar link</button></div>
+<p style="margin-top:24px;font-size:15px">¿Aún no tienes la app? Argo llega muy pronto a la App Store. Guarda este link para unirte cuando la instales.</p>
 </section></div>
 <script>
 (function(){var t=(new URLSearchParams(location.search).get('c')||'').replace(/[^0-9A-Za-z]/g,'').slice(0,64);
@@ -501,13 +503,13 @@ var open=document.getElementById('open'),copy=document.getElementById('copy');
 if(t.length>=16){open.href='costsplit://join/'+t;}else{document.getElementById('lead').textContent='Este link está incompleto. Pide a alguien del grupo que te lo vuelva a enviar.';open.style.display='none';copy.style.display='none';}
 copy.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(location.href);this.textContent='Copiado';}};})();
 </script>"""
-    return page("/splitnest/unirse/", "Te invitaron a SplitNest", "Únete a tu grupo en SplitNest para llevar las cuentas de los gastos compartidos.", body, app="splitnest")
+    return page("/argo/unirse/", "Te invitaron a Argo", "Únete a tu grupo en Argo para llevar las cuentas de los gastos compartidos.", body, app="argo")
 
 
 def not_found():
     body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
 <p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
-<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/splitnest/">SplitNest</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
+<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/argo/">Argo</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
     return page("/404.html", "Página no encontrada · Vita Apps", "", body)
 
 
@@ -524,14 +526,19 @@ if __name__ == "__main__":
     write("lumos-wallet/index.html", product())
     write("lumos-wallet/privacidad/index.html", legal("/lumos-wallet/privacidad/", "privacy-policy.md", "privacidad"))
     write("lumos-wallet/soporte/index.html", legal("/lumos-wallet/soporte/", "support.md", "soporte"))
-    write("splitnest/index.html", splitnest())
-    write("splitnest/privacidad/index.html", legal("/splitnest/privacidad/", "privacy-policy.md", "privacidad", app="splitnest"))
-    write("splitnest/soporte/index.html", legal("/splitnest/soporte/", "support.md", "soporte", app="splitnest"))
+    write("argo/index.html", argo())
+    write("argo/privacidad/index.html", legal("/argo/privacidad/", "privacy-policy.md", "privacidad", app="argo"))
+    write("argo/soporte/index.html", legal("/argo/soporte/", "support.md", "soporte", app="argo"))
     write("alcanza/index.html", redirect("/lumos-wallet/"))
     write("alcanza/privacidad/index.html", redirect("/lumos-wallet/privacidad/"))
     write("alcanza/soporte/index.html", redirect("/lumos-wallet/soporte/"))
     write("i/index.html", invite())
-    write("splitnest/unirse/index.html", splitnest_join())
+    write("argo/unirse/index.html", argo_join())
+    # SplitNest se llamó así hasta octubre de 2026; sus links siguen funcionando.
+    write("splitnest/index.html", redirect("/argo/", "Argo"))
+    write("splitnest/privacidad/index.html", redirect("/argo/privacidad/", "Argo"))
+    write("splitnest/soporte/index.html", redirect("/argo/soporte/", "Argo"))
+    write("splitnest/unirse/index.html", redirect("/argo/unirse/", "Argo", keep_query=True))
     write("lumos-wallet/hogar/index.html", lumos_join())
     write("lumos-wallet/eliminar-cuenta/index.html", lumos_delete_account())
     write("404.html", not_found())
