@@ -34,7 +34,7 @@ Sí. Puedes agregar gastos y pagos sin conexión; se sincronizan solos cuando vu
 ## Viajes
 
 **¿Cómo uso el planificador de viajes?**
-Crea un grupo de tipo Viaje y ponle fechas y destino. El grupo se divide en Hoy, Plan, Decidir, Dinero y Grupo. En Hoy ves en qué día van, qué sigue y un botón para anotar un gasto en dos toques.
+Crea un grupo de tipo Viaje y ponle fechas y destino. El grupo se divide en Hoy, Plan, Decidir, Gastos y Grupo. En Hoy ves en qué día van, qué sigue y un botón para anotar un gasto en dos toques.
 
 **¿Cómo armo el itinerario?**
 En Plan agrega actividades a cada día con horario, lugar y quién va. Si anotas el gasto de una actividad, se divide solo entre quienes fueron. Con Argo Pro también puedes pegar el correo de confirmación de un vuelo, hospedaje o tour y la actividad se llena sola.

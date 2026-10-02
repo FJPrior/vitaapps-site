@@ -14,7 +14,7 @@ Argo es una app para planear viajes y llevar las cuentas de los gastos que compa
 - **Tus métodos de cobro.** Si los agregas en Cuenta → Cobrar: tu CLABE, número de cuenta, IBAN, usuario de PayPal, Mercado Pago u otro, para que las personas de tus grupos te paguen más fácil.
 - **Notificaciones.** Si las activas, guardamos un identificador de notificaciones de tu iPhone (token de Firebase Cloud Messaging), el idioma, la zona horaria y la versión de la app, para mandarte avisos cuando alguien agrega un gasto, registra un pago o se une a tu grupo. Se borra al cerrar sesión o al desactivarlas.
 - **Personas sin cuenta.** Puedes agregar a alguien a un grupo solo con su nombre, aunque no use Argo. De esa persona solo guardamos el nombre que se escriba y los gastos y pagos en los que aparece. Si alguien te agregó así y quieres que cambie o quite tu nombre, pídeselo a esa persona o escríbenos.
-- **Tu lista de personas.** Para mostrarte en "Personas" tus saldos con alguien sumando todos los grupos que comparten, guardamos una lista que relaciona a esa persona entre tus grupos. Esa lista es privada: solo tú la ves.
+- **Tu lista de personas.** Para mostrarte en "Amigos" tus saldos con alguien sumando todos los grupos que comparten, guardamos una lista que relaciona a esa persona entre tus grupos. Esa lista es privada: solo tú la ves.
 - **Reportes de fallas.** Si la app se cierra por un error, puede enviarse un reporte técnico (versión de la app, modelo de iPhone y en qué parte ocurrió el error) para poder corregirlo. No incluye tus gastos.
 
 Argo **no se conecta a tu banco**, **no mueve dinero** y **no te pide datos de tarjetas**. Los pagos entre ustedes se hacen por fuera (en efectivo, por transferencia, etc.); en la app solo quedan anotados.

@@ -379,7 +379,7 @@ def argo():
 <li>Anota un gasto escribiendo o dictando una frase: «Tacos 450, pagó Ana».</li>
 <li>Avisos cuando alguien agrega un gasto o registra un pago.</li>
 <li>Widgets con tu saldo y tu próximo viaje, y atajos de Siri.</li>
-<li>En Personas ves cuánto te debe cada quien, sumando todos los grupos.</li>
+<li>En Amigos ves cuánto te debe cada quien, sumando todos los grupos.</li>
 <li>Reporte del grupo en PDF y CSV para cerrar cuentas.</li>
 <li>Funciona sin internet y se sincroniza cuando vuelves a tener señal.</li>
 <li>En español e inglés, con pesos, dólares, euros y otras monedas.</li>
