@@ -222,6 +222,14 @@ I_CHART = '<path d="M3 3v18h18"/><path d="M8 17v-4M12 17V8M16 17v-6M20 17V5"/>'
 I_BELL = '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'
 I_LINK = '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>'
 
+I_SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+I_TICKET = '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v2M13 11v2M13 17v2"/>'
+I_VOTE = '<path d="M9 12l2 2 4-4"/><path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12H5z"/><path d="M22 19H2"/>'
+I_BAG = '<path d="M6 20a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/>'
+I_BED = '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6M2 18h20"/>'
+I_GLOBE = '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'
+I_TASKS = '<path d="M3 17l2 2 4-4"/><path d="M3 7l2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/>'
+
 def cards(items):
     return '<div class="grid">' + "".join(
         f'<div class="card">{icon(i)}<h3>{t}</h3><p>{p}</p></div>' for i, t, p in items
@@ -248,7 +256,7 @@ def landing():
 </div>
 <div class="card app-card">
 <img src="/assets/argo-icon.png" alt="Ícono de Argo" width="96" height="96">
-<div class="txt"><h3>Argo</h3><p>Gastos compartidos sin broncas: con tus roomies, tu pareja o en un viaje con amigos, quién pagó y quién le debe a quién, al centavo.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
+<div class="txt"><h3>Argo</h3><p>Viajes y gastos en grupo: planeen el itinerario, voten, armen la maleta y lleven la cuenta de quién pagó y quién le debe a quién, al centavo. También para el depa o tu pareja.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
 <a class="btn primary" href="/argo/">Ver la app</a>
 </div>
 </section>
@@ -265,7 +273,7 @@ def landing():
 </div>
 """
     return page("/", "Vita Apps · Apps sencillas para iPhone",
-                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro, y Argo, para dividir gastos en grupo.", body)
+                "Vita Apps hace apps para iPhone pensadas en México. Conoce Lumos Wallet, tu presupuesto personal claro, y Argo, para planear viajes y dividir gastos en grupo.", body)
 
 
 def product():
@@ -324,9 +332,9 @@ def argo():
 <div class="wrap">
 <section class="hero split">
 <div>
-<div class="app-id"><img src="/assets/argo-icon.png" alt="" width="72" height="72"><div><strong>Argo</strong><span>Finanzas · iPhone</span></div></div>
-<h1>Cuentas claras, amistades largas.</h1>
-<p class="lead">Argo lleva la cuenta de lo que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó, cuánto le toca a cada quien y quién le debe a quién, al centavo.</p>
+<div class="app-id"><img src="/assets/argo-icon.png" alt="" width="72" height="72"><div><strong>Argo</strong><span>Viajes y gastos en grupo · iPhone</span></div></div>
+<h1>Viajen juntos. Argo hace las cuentas.</h1>
+<p class="lead">Planeen el viaje, decidan entre todos y lleven la cuenta de cada gasto en un solo lugar: el itinerario, las votaciones, la maleta, el fondo común y quién le debe a quién, al centavo. También para el depa, tu pareja o la fiesta.</p>
 <div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
 </div>
 <div style="position:relative"><div class="glow"></div><img class="hero-mark" src="/assets/argo-icon.png" alt="" width="240" height="240"></div>
@@ -334,25 +342,45 @@ def argo():
 </div>
 
 <section class="band"><div class="wrap">
-<span class="eyebrow">Qué hace</span>
-<h2>Se acabó andar cobrando con la calculadora</h2>
+<span class="eyebrow">Para el viaje</span>
+<h2>Todo el viaje en una sola app</h2>
 {cards([
-    (I_USERS, "Un grupo para cada cosa", "El viaje, el depa, tu pareja o una fiesta. Agrega a la gente solo con su nombre, aunque todavía no tenga la app: cuando se una, se queda con su lugar."),
-    (I_PIE, "Divide como sea justo", "En partes iguales, por partes, por porcentaje o con ajustes para quien pidió de más. Los saldos cuadran al centavo."),
-    (I_MERGE, "Menos pagos para quedar a mano", "Con Simplificar deudas, Argo te sugiere la menor cantidad de pagos para que todos queden en paz."),
-    (I_CASH, "Anota cada pago", "Completo o en abonos, en efectivo, por transferencia, PayPal, Revolut u otro. Y si alguien cubre la deuda de otro, también se puede."),
-    (I_REPEAT, "Gastos que se repiten", "Crea plantillas para la renta, los servicios y las suscripciones, y anota los que ya tocan con un toque."),
-    (I_CHART, "Presupuesto del grupo", "Ponle un tope al viaje o a la casa y ve en qué se va el dinero, por categoría y por quién pagó."),
+    (I_SUN, "Hoy", "Al abrir el viaje ves en qué día van, qué sigue en el plan y un botón para anotar el gasto en dos toques."),
+    (I_CAL, "Itinerario por días", "Arma el plan día por día con horarios, lugares y quién va a cada actividad. El gasto de una actividad se divide solo entre quienes fueron."),
+    (I_TICKET, "Pega tu reservación", "Copia el correo de confirmación del vuelo, el Airbnb o el tour, y Argo llena la actividad con la fecha, la clave de reservación y el monto."),
+    (I_VOTE, "Votaciones", "¿Qué hotel? ¿Dónde cenamos? Propongan opciones con precio, pros y contras, voten y vean quién falta. Si hay empate, Argo ayuda a desempatar."),
+    (I_BAG, "La maleta", "Lo que lleva cada quien y lo que se comparte. Apúntate con «Yo lo llevo», usa plantillas para playa, ciudad o frío y guarda las tuyas. Queda el historial de quién se apuntó."),
+    (I_TASKS, "Pendientes", "Reservar el coche, comprar los boletos: asigna cada pendiente a alguien, con fecha, y márcalo cuando esté hecho."),
+    (I_JAR, "Fondo del viaje", "La coope: pongan una meta por persona, vean quién ya aportó y paguen los gastos comunes directo del fondo."),
+    (I_BED, "Hospedaje por noches", "Si alguien llega un día después o se va antes, paga solo las noches que se quedó."),
+    (I_CHART, "Presupuesto y resumen", "Ponle un tope al viaje y ve cuánto pueden gastar por día. Al final, un resumen con el total, lo que tocó por persona y en qué se fue el dinero."),
 ])}
 </div></section>
 
 <div class="wrap">
 <section>
+<span class="eyebrow">Las cuentas</span>
+<h2>Cuentas claras, amistades largas</h2>
+{cards([
+    (I_USERS, "Un grupo para cada cosa", "El viaje, el depa, tu pareja o una fiesta. Agrega a la gente solo con su nombre, aunque todavía no tenga la app: cuando se una, se queda con su lugar."),
+    (I_PIE, "Divide como sea justo", "En partes iguales, por montos, porcentajes, partes o con ajustes, y con varios pagadores. Escanea el ticket y asigna cada artículo a quien lo pidió."),
+    (I_GLOBE, "En cualquier moneda", "Anota el gasto en la moneda del lugar y Argo lo convierte con el tipo de cambio del día."),
+    (I_MERGE, "Menos pagos para quedar a mano", "Con Simplificar deudas, Argo te sugiere la menor cantidad de pagos para que todos queden en paz."),
+    (I_CASH, "Cobra y paga fácil", "Comparte tu CLABE, PayPal u otros métodos, manda un recordatorio amable y anota pagos completos o en abonos."),
+    (I_REPEAT, "Gastos que se repiten", "La renta, los servicios y las suscripciones se anotan solos cada semana, mes o año, y pueden rotar quién paga."),
+])}
+</section>
+
+<section>
 <span class="eyebrow">Y además</span>
 <h2>Pensada para cómo se hacen las cuentas en la vida real</h2>
 <ul class="checks">
-<li>Invita con un link o un código, también por WhatsApp.</li>
-<li>En Personas ves cuánto te debe cada quien, sumando todos los grupos que comparten.</li>
+<li>Invita con un link, también por WhatsApp.</li>
+<li>Anota un gasto escribiendo o dictando una frase: «Tacos 450, pagó Ana».</li>
+<li>Avisos cuando alguien agrega un gasto o registra un pago.</li>
+<li>Widgets con tu saldo y tu próximo viaje, y atajos de Siri.</li>
+<li>En Personas ves cuánto te debe cada quien, sumando todos los grupos.</li>
+<li>Reporte del grupo en PDF y CSV para cerrar cuentas.</li>
 <li>Funciona sin internet y se sincroniza cuando vuelves a tener señal.</li>
 <li>En español e inglés, con pesos, dólares, euros y otras monedas.</li>
 </ul>
@@ -361,10 +389,9 @@ def argo():
 <section>
 <span class="eyebrow">Lo que viene</span>
 <h2>Pronto en Argo</h2>
-<p style="color:var(--muted);margin:0">Todavía no están en la app, pero ya estamos trabajando en ellas.</p>
+<p style="color:var(--muted);margin:0">Todavía no están disponibles, pero ya estamos trabajando en ellas.</p>
 {cards([
-    (I_BELL, "Recordatorios", "Un empujoncito amable para quien tiene pagos pendientes."),
-    (I_LINK, "Links de pago", "Comparte tu CLABE o tu link de Mercado Pago para que te paguen más fácil."),
+    (I_LINK, "Argo en la web", "Tus mismos grupos, viajes y saldos desde la computadora."),
     (I_GAUGE, "Conexión con Lumos Wallet", "Lleva tu parte de cada gasto compartido a tu presupuesto en Lumos Wallet."),
 ])}
 </section>
@@ -388,8 +415,8 @@ def argo():
 </section>
 </div>
 """
-    return page("/argo/", "Argo · Gastos compartidos sin broncas",
-                "Argo lleva la cuenta de los gastos que compartes con tus roomies, tu pareja o tus amigos de viaje: quién pagó y quién le debe a quién, al centavo.", body, app="argo")
+    return page("/argo/", "Argo · Viajes y gastos en grupo",
+                "Planeen el viaje y lleven la cuenta juntos: itinerario por días, votaciones, la maleta, el fondo común y quién le debe a quién, al centavo.", body, app="argo")
 
 
 def legal(path, source, kind, app="lumos"):
