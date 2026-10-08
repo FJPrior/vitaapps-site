@@ -51,6 +51,15 @@ En Grupo → Fondo del viaje pongan una meta por persona y una fecha. Cada aport
 **Alguien llega después o se va antes. ¿Paga todo el hospedaje?**
 No. En Grupo pon las fechas de llegada y salida de esa persona; al dividir el hospedaje por noches, cada quien paga solo las noches que se quedó.
 
+**¿Puedo agregar a mi agente de viajes?**
+Sí. En Personas → Agente de viajes invítalo con un link o agrégalo solo con su nombre. Un agente de viajes ayuda a planear y nunca entra en la división de gastos. Tú eliges qué puede hacer en tres áreas: el plan y las reservaciones, las votaciones y pendientes, y los gastos y saldos. Cada una puede ser "Ver y editar" (lo normal), "Solo ver" u "Oculto"; por ejemplo, que edite el plan pero no vea los gastos. Lo puedes cambiar cuando quieras.
+
+**¿Cómo pongo recordatorios antes del viaje?**
+En Grupo → Pendientes agrega uno con fecha "Antes del viaje", por ejemplo "Pagar los boletos de Disney" 60 días antes. Si cambian las fechas del viaje, el pendiente se mueve solo. A quien le toca le llega un aviso ese día a las 9:00 (y tres días antes si es un pago) cuando activas los recordatorios del viaje.
+
+**¿Puedo ver el itinerario en mi calendario?**
+Sí. En Plan toca "Agregar el viaje a tu calendario" y elige Calendario de Apple o Google Calendar, o copia el link para Outlook. El calendario se actualiza solo cuando cambia el plan.
+
 ## Argo Pro y Miembro Fundador
 
 **¿Qué es Argo Pro?**
