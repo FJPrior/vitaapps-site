@@ -4,6 +4,7 @@
 Fuente de los textos legales (privacy-policy.md y support.md):
   Lumos Wallet: ../Budget/docs/
   Argo:    _docs/argo/ (Jekyll no publica carpetas que empiezan con _)
+  Knotwork: _docs/knotwork/
 Uso:  python3 build.py   (luego commit + push desde GitHub Desktop)
 """
 import datetime
@@ -33,6 +34,16 @@ APPS = {
         "css": ":root{--accent:#077c92;--accent-soft:#e1f3f6;--accent-ink:#fff}"
                "@media (prefers-color-scheme:dark){:root{--accent:#3cc3d9;--accent-soft:#0f2a30;--accent-ink:#03222a}}"
                ".hero-mark{width:min(240px,56vw);margin:0 auto;border-radius:22.5%;box-shadow:0 30px 60px -20px rgba(8,80,96,.35)}\n",
+    },
+    "knotwork": {
+        "name": "Knotwork",
+        "path": "/knotwork/",
+        "docs": ROOT / "_docs" / "knotwork",
+        "og_image": "knotwork-icon.png",
+        # Verde azulado de Knotwork (el color de los juegos de lógica en la app).
+        "css": ":root{--accent:#2f8f83;--accent-soft:#e3f2ef;--accent-ink:#fff}"
+               "@media (prefers-color-scheme:dark){:root{--accent:#4fb3a6;--accent-soft:#12302c;--accent-ink:#04201c}}"
+               ".fam{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.fam span{font-size:14px;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600}\n",
     },
 }
 
@@ -163,7 +174,7 @@ footer.site a:first-child{margin-left:0}
 def page(path, title, description, body, doc=False, app="lumos"):
     a = APPS[app]
     # "Soporte" lleva al soporte de la app en la que estás; en celular se oculta (está en el pie).
-    nav_items = [(APPS["lumos"]["path"], "Lumos Wallet", ""), (APPS["argo"]["path"], "Argo", ""),
+    nav_items = [(APPS["lumos"]["path"], "Lumos Wallet", ""), (APPS["argo"]["path"], "Argo", ""), (APPS["knotwork"]["path"], "Knotwork", ' class="hide-sm"'),
                  (a["path"] + "soporte/", "Soporte", ' class="hide-sm"')]
     nav = "".join(
         f'<a href="{href}"{cls}{" aria-current=page" if href == path else ""}>{label}</a>' for href, label, cls in nav_items
@@ -258,6 +269,11 @@ def landing():
 <img src="/assets/argo-icon.png" alt="Ícono de Argo" width="96" height="96">
 <div class="txt"><h3>Argo</h3><p>Viajes y gastos en grupo: planeen el itinerario, voten, armen la maleta y lleven la cuenta de quién pagó y quién le debe a quién, al centavo. También para el depa o tu pareja.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
 <a class="btn primary" href="/argo/">Ver la app</a>
+</div>
+<div class="card app-card">
+<img src="/assets/knotwork-icon.png" alt="Ícono de Knotwork" width="96" height="96">
+<div class="txt"><h3>Knotwork</h3><p>Puzzles diarios de palabras, lógica, imágenes y trivia: diez minutos al día, con pistas que te enseñan y retos con tus amigos.</p><p style="margin-top:12px"><span class="pill">Próximamente</span></p></div>
+<a class="btn primary" href="/knotwork/">Ver la app</a>
 </div>
 </section>
 
@@ -425,6 +441,77 @@ def argo():
                 "Planeen el viaje y lleven la cuenta juntos: itinerario por días, votaciones, la maleta, el fondo común y quién le debe a quién, al centavo.", body, app="argo")
 
 
+I_PUZZLE = '<path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v7h-3a2 2 0 1 0 0 4h3v7h-7v-3a2 2 0 1 0-4 0v3H3v-7h3a2 2 0 1 0 0-4H3V3z"/>'
+I_BULB = '<path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>'
+I_FLAME = '<path d="M12 22c4 0 7-2.7 7-7 0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-3 2-5 5-5 8 0 4.3 3 7 7 7z"/>'
+I_BOOK = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>'
+I_STACK = '<path d="M12 2l10 5-10 5L2 7z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/>'
+I_WHEEL = '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v7M12 15v7M2 12h7M15 12h7"/>'
+
+
+def knotwork():
+    fam = lambda names: '<div class="fam">' + "".join(f"<span>{n}</span>" for n in names) + "</div>"
+    body = f"""
+<div class="wrap">
+<section class="hero split">
+<div>
+<div class="app-id"><img src="/assets/knotwork-icon.png" alt="" width="72" height="72"><div><strong>Knotwork</strong><span>Juegos de puzzles · iPhone</span></div></div>
+<h1>Diez minutos al día. Más agudo cada semana.</h1>
+<p class="lead">Knotwork reúne 17 juegos de palabras, lógica, imágenes y trivia. Cada día hay puzzles nuevos, iguales para todos, en Fácil, Medio o Difícil, con pistas que te enseñan a pensar el siguiente paso.</p>
+<div class="btns"><span class="pill">Muy pronto en la App Store</span></div>
+</div>
+<div style="position:relative"><div class="glow"></div><div class="phone"><img src="/assets/knotwork-hoy.jpg" alt="Pantalla Hoy de Knotwork con los juegos del día" width="639" height="1390"></div></div>
+</section>
+</div>
+
+<section class="band"><div class="wrap">
+<span class="eyebrow">Los juegos</span>
+<h2>17 juegos, uno para cada tipo de mente</h2>
+<div class="grid">
+<div class="card">{icon(I_BOOK)}<h3>Palabras</h3><p>Cambia una letra a la vez, descifra citas célebres, arma palabras con piezas o encuentra tres palabras ocultas en cadena.</p>{fam(["Escalera", "Clave", "Acertijo", "Crucigrama", "Trama", "Empalme", "Sopa", "Relevo"])}</div>
+<div class="card">{icon(I_PUZZLE)}<h3>Lógica</h3><p>Sudoku con variantes Killer, Thermo e Irregular, puentes entre islas, jaulas con sumas y un buscaminas que nunca te obliga a adivinar.</p>{fam(["Sudoku", "Puentes", "Jaula", "Minas"])}</div>
+<div class="card">{icon(I_EYE)}<h3>Visual</h3><p>Pinta casillas para revelar una imagen, libera la llave entre bloques, reparte el tablero en parcelas o une pares de símbolos.</p>{fam(["Mosaico", "Atasco", "Parcelas", "Lazos"])}</div>
+<div class="card">{icon(I_WHEEL)}<h3>Trivia</h3><p>Gira la rueda y responde antes de que se acabe el tiempo: más de 2,000 preguntas en español de historia, ciencia, arte, deportes y más.</p>{fam(["Acierto"])}</div>
+</div>
+</div></section>
+
+<div class="wrap">
+<section>
+<span class="eyebrow">Cómo se juega</span>
+<h2>Un poco cada día, mejor cada semana</h2>
+{cards([
+    (I_CAL, "Juegos nuevos cada día", "8 de lunes a jueves y 10 de viernes a domingo, con un extra difícil cada domingo. ¿Te perdiste uno? Regresa a los días anteriores."),
+    (I_BULB, "Pistas que enseñan", "Primero te dicen qué está mal; luego te marcan en el tablero dónde mirar y por qué. Nunca solo la respuesta."),
+    (I_CHART, "Un rating por juego", "Cada diario que resuelves lo sube o lo baja. Ata tu nudo de bronce, plata u oro según tu puntaje."),
+    (I_FLAME, "Racha con escudos", "Resuelve al menos uno al día para mantener tu racha; los escudos cubren los días ocupados."),
+    (I_STACK, "Tutoriales y colecciones", "Tres niveles de tutorial por juego y colecciones con tema que suben de Fácil a Difícil, como las constelaciones de Puentes."),
+    (I_USERS, "Con tus amigos", "Rankings del día y la semana, duelos con el mismo puzzle, grupos con desafío diario y Acierto en línea o en el mismo teléfono."),
+])}
+</section>
+
+<section>
+<span class="eyebrow">Privacidad</span>
+<h2>Juega sin dar nada a cambio</h2>
+<ul class="checks">
+<li>Sin anuncios y sin compras dentro de la app.</li>
+<li>Sin cuenta, tu progreso se queda solo en tu iPhone.</li>
+<li>La cuenta es opcional, solo para jugar con amigos.</li>
+<li>Sin rastreo entre apps; borra tu cuenta desde la app cuando quieras.</li>
+</ul>
+<p style="margin-top:22px"><a href="/knotwork/privacidad/">Lee el aviso de privacidad →</a></p>
+</section>
+
+<section class="cta">
+<h2>¿Tienes preguntas?</h2>
+<p>Revisa las preguntas frecuentes o escríbenos. Respondemos lo antes posible.</p>
+<div class="btns"><a class="btn primary" href="/knotwork/soporte/">Ir a soporte</a><a class="btn" href="mailto:{EMAIL}">{EMAIL}</a></div>
+</section>
+</div>
+"""
+    return page("/knotwork/", "Knotwork · Puzzles diarios",
+                "Knotwork reúne 17 juegos de palabras, lógica, imágenes y trivia. Puzzles nuevos cada día, con pistas que enseñan y retos con tus amigos.", body, app="knotwork")
+
+
 def legal(path, source, kind, app="lumos"):
     a = APPS[app]
     title, content = markdown((a["docs"] / source).read_text(encoding="utf-8"))
@@ -542,7 +629,7 @@ copy.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(lo
 def not_found():
     body = """<div class="wrap"><section class="hero cta"><span class="eyebrow">Error 404</span><h1>Esta página no existe.</h1>
 <p class="lead" style="margin:0 auto">Quizá el enlace cambió. Estas sí existen:</p>
-<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/argo/">Argo</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
+<div class="btns"><a class="btn primary" href="/">Inicio</a><a class="btn" href="/lumos-wallet/">Lumos Wallet</a><a class="btn" href="/argo/">Argo</a><a class="btn" href="/knotwork/">Knotwork</a><a class="btn" href="/lumos-wallet/soporte/">Soporte</a></div></section></div>"""
     return page("/404.html", "Página no encontrada · Vita Apps", "", body)
 
 
@@ -574,4 +661,7 @@ if __name__ == "__main__":
     write("splitnest/unirse/index.html", redirect("/argo/unirse/", "Argo", keep_query=True))
     write("lumos-wallet/hogar/index.html", lumos_join())
     write("lumos-wallet/eliminar-cuenta/index.html", lumos_delete_account())
+    write("knotwork/index.html", knotwork())
+    write("knotwork/privacidad/index.html", legal("/knotwork/privacidad/", "privacy-policy.md", "privacidad", app="knotwork"))
+    write("knotwork/soporte/index.html", legal("/knotwork/soporte/", "support.md", "soporte", app="knotwork"))
     write("404.html", not_found())
